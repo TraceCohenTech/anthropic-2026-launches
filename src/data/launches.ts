@@ -24,7 +24,313 @@ export interface Launch {
 }
 
 export const LAUNCHES: Launch[] = [
-  // January
+  // ========== 2025 ==========
+  {
+    id: 'citations-2025',
+    date: '2025-01-23',
+    name: 'Citations API',
+    category: 'Developer',
+    summary: 'Auto-ground Claude responses in source docs with verifiable citations.',
+    howItWorks:
+      'You attach source documents to a Messages API call; Claude returns responses where every claim is tagged with the specific sentence or block it came from. Hallucination drops meaningfully because fabricating a citation is harder than fabricating a claim.',
+    competitors: ['OpenAI file search', 'Perplexity API', 'Cohere RAG', 'LlamaIndex'],
+    useCases: ['Legal and research agents', 'Customer support grounded in docs', 'Compliance responses'],
+    impact: 'Reduced hallucinated facts by ~30% in Anthropic internal evals.',
+  },
+  {
+    id: 'claude-3-7-sonnet',
+    date: '2025-02-24',
+    name: 'Claude 3.7 Sonnet',
+    category: 'Model',
+    tag: 'Flagship',
+    summary: 'First hybrid reasoning model — toggle extended thinking on demand.',
+    howItWorks:
+      '3.7 Sonnet introduced the "extended thinking" mode: the model can reason through a problem with a controllable budget of thinking tokens before answering. Developers choose per-request whether to use it and how much budget to grant.',
+    competitors: ['OpenAI o3-mini', 'DeepSeek R1', 'Gemini 2.0 Flash Thinking', 'Grok 3'],
+    useCases: ['Math and coding', 'Complex multi-step agents', 'Long-horizon planning'],
+    impact: 'SOTA on SWE-bench Verified at launch (70.3%).',
+    pricing: '$3 / $15 per 1M input/output tokens.',
+  },
+  {
+    id: 'claude-code-preview',
+    date: '2025-02-24',
+    name: 'Claude Code (Research Preview)',
+    category: 'Developer',
+    tag: 'Research Preview',
+    summary: 'Agentic CLI that writes, debugs, and commits code end-to-end.',
+    howItWorks:
+      'A terminal-first agent that runs inside your repo, can read files, write patches, run tests, commit to git, and open PRs — using 3.7 Sonnet\'s extended thinking when it gets stuck.',
+    competitors: ['Cursor', 'GitHub Copilot CLI', 'Aider', 'Devin', 'Cline'],
+    useCases: ['Refactoring', 'Bug fixing', 'New feature scaffolding', 'Test generation'],
+    availability: 'Research preview, npm install -g @anthropic-ai/claude-code.',
+  },
+  {
+    id: 'claude-for-education',
+    date: '2025-04-02',
+    name: 'Claude for Education',
+    category: 'Enterprise',
+    summary: 'Campus-wide Claude for Northeastern, LSE, and Champlain College.',
+    howItWorks:
+      'Enterprise-grade Claude with a "Learning mode" system prompt that guides students through Socratic questioning instead of giving answers. Includes SSO, admin console, and usage analytics.',
+    competitors: ['OpenAI for Education / ChatGPT Edu', 'Google Gemini for Education', 'Khanmigo'],
+    useCases: ['Tutoring across disciplines', 'Writing feedback', 'Research assistance'],
+    impact: 'First AI partnership at the scale of an entire university system.',
+  },
+  {
+    id: 'claude-max',
+    date: '2025-04-09',
+    name: 'Claude Max',
+    category: 'Product',
+    summary: 'New $100 / $200 tier for power users hitting Pro rate limits.',
+    howItWorks:
+      '5× and 20× the usage of Pro, priority capacity during peak load, and first access to new features. Designed for researchers and engineers running Claude Code and agents all day.',
+    competitors: ['ChatGPT Pro ($200)', 'Gemini Advanced', 'Perplexity Max'],
+    pricing: '$100/mo or $200/mo.',
+  },
+  {
+    id: 'claude-research',
+    date: '2025-04-15',
+    name: 'Research',
+    category: 'Product',
+    summary: 'Agentic multi-source research inside Claude.ai.',
+    howItWorks:
+      'Claude spawns sub-agents that search the web, your Google Workspace, and connected apps in parallel, then synthesizes findings into a sourced report over 5–45 minutes.',
+    competitors: ['ChatGPT Deep Research', 'Gemini Deep Research', 'Perplexity Deep Research'],
+    useCases: ['Market and competitive research', 'Due diligence', 'Literature reviews'],
+  },
+  {
+    id: 'integrations',
+    date: '2025-05-01',
+    name: 'Integrations (MCP connectors)',
+    category: 'Integration',
+    summary: 'Claude connects to Jira, Asana, Zapier, Intercom, Slack, and more.',
+    howItWorks:
+      'Remote MCP servers that Claude can attach to inside chat. OAuth once, then Claude can read/write across your tools in a single conversation.',
+    competitors: ['ChatGPT Connectors', 'Glean', 'Zapier Central'],
+    useCases: ['Pull tickets from Jira into a plan', 'Log decisions into Asana', 'Draft Intercom replies from knowledge bases'],
+  },
+  {
+    id: 'claude-4',
+    date: '2025-05-22',
+    name: 'Claude 4 — Opus 4 & Sonnet 4',
+    category: 'Model',
+    tag: 'Flagship',
+    summary: 'New flagship family: Opus 4 for long-horizon work, Sonnet 4 for everyday.',
+    howItWorks:
+      'Opus 4 runs 7-hour coding sessions autonomously; Sonnet 4 matches most of Opus 3.5\'s capability at Sonnet prices. Both support extended thinking, tool use during thinking, and parallel tool calls.',
+    competitors: ['GPT-4.1', 'Gemini 2.5 Pro', 'DeepSeek V3', 'Grok 3'],
+    useCases: ['Autonomous coding agents', 'Long-running research', 'High-volume production workloads'],
+    impact: 'Opus 4 set SOTA on SWE-bench Verified (72.5%) and Terminal-bench.',
+    pricing: 'Opus 4: $15 / $75 · Sonnet 4: $3 / $15 per 1M tokens.',
+  },
+  {
+    id: 'claude-code-ga',
+    date: '2025-05-22',
+    name: 'Claude Code GA',
+    category: 'Developer',
+    tag: 'GA',
+    summary: 'Claude Code exits beta with IDE, GitHub Actions, and SDK.',
+    howItWorks:
+      'GA ships VS Code and JetBrains extensions, a GitHub Actions runner that tags Claude on PRs, and a programmatic SDK so you can call the agent from your own tools.',
+    competitors: ['Cursor', 'GitHub Copilot Workspace', 'Devin', 'Cline', 'Aider'],
+    useCases: ['PR review and auto-fix', 'Feature implementation from specs', 'Codebase onboarding'],
+  },
+  {
+    id: 'artifacts-apps',
+    date: '2025-06-25',
+    name: 'Artifacts that Build Apps',
+    category: 'Product',
+    summary: 'Share interactive Claude-built apps with a public link.',
+    howItWorks:
+      'Artifacts became full apps: Claude writes React, hosts it on Anthropic infra, and gives you a shareable URL. Recipients use YOUR Claude credits only when they interact with the AI inside.',
+    competitors: ['ChatGPT Canvas share', 'v0 by Vercel', 'Lovable', 'Bolt.new'],
+    useCases: ['Shareable calculators', 'Interactive one-pagers', 'Quick internal tools'],
+  },
+  {
+    id: 'claude-gov',
+    date: '2025-07-10',
+    name: 'Claude Gov',
+    category: 'Enterprise',
+    summary: 'FedRAMP-ready Claude for U.S. national security customers.',
+    howItWorks:
+      'A dedicated model cluster plus product surface cleared for classified and controlled unclassified workloads, with higher language coverage on strategically important regions and dialects.',
+    competitors: ['Palantir AIP', 'Microsoft Azure Gov OpenAI', 'Scale Donovan'],
+  },
+  {
+    id: 'financial-solution',
+    date: '2025-07-15',
+    name: 'Claude Financial Analysis Solution',
+    category: 'Enterprise',
+    summary: 'Pre-built package for analysts: data connectors, models, prompts.',
+    howItWorks:
+      'Bundles Claude with pre-built connectors to Snowflake, Databricks, S&P Capital IQ, FactSet, PitchBook, Box — plus Claude Code + Enterprise admin controls tuned for financial-services compliance.',
+    competitors: ['Bloomberg GPT', 'Hebbia', 'Rogo', 'AlphaSense'],
+    useCases: ['Equity research', 'Due diligence', 'Earnings analysis'],
+  },
+  {
+    id: 'claude-opus-4-1',
+    date: '2025-08-05',
+    name: 'Claude Opus 4.1',
+    category: 'Model',
+    summary: 'Drop-in upgrade for Opus 4: +2–3pt on coding, same price.',
+    howItWorks:
+      'A targeted post-training refresh focused on real-world agentic coding benchmarks. Same API and pricing as Opus 4 — flip the model name.',
+    competitors: ['GPT-4.1', 'Gemini 2.5 Pro', 'DeepSeek V3.1'],
+    impact: '74.5% on SWE-bench Verified.',
+    pricing: '$15 / $75 per 1M tokens (same as Opus 4).',
+  },
+  {
+    id: 'memory',
+    date: '2025-08-12',
+    name: 'Memory',
+    category: 'Product',
+    summary: 'Claude remembers context across conversations.',
+    howItWorks:
+      'Claude extracts durable facts (your projects, preferences, people you work with) into a memory store that persists across chats. You can view, edit, or clear it. Off by default on Team/Enterprise; admin-controllable.',
+    competitors: ['ChatGPT Memory', 'Gemini memory', 'Pi by Inflection'],
+    useCases: ['Long-running personal assistant', 'Consistent code style across sessions', 'Team memory on Enterprise'],
+  },
+  {
+    id: 'sonnet-4-1m',
+    date: '2025-08-19',
+    name: 'Sonnet 4: 1M Context',
+    category: 'Developer',
+    summary: 'Sonnet 4 expands to 1M-token context on the API.',
+    howItWorks:
+      'Same model, bigger window. Prompts above 200K tokens use a long-context pricing tier to offset the serving cost.',
+    competitors: ['Gemini 2.5 (1M)', 'GPT-4.1 (1M)', 'MiniMax-01 (4M)'],
+    useCases: ['Whole-codebase reasoning', 'Entire legal corpora', 'Month-long chat histories'],
+    pricing: '≤200K: $3/$15 · >200K: $6/$22.50 per 1M tokens.',
+  },
+  {
+    id: 'chrome-pilot',
+    date: '2025-08-26',
+    name: 'Claude for Chrome (Pilot)',
+    category: 'Product',
+    tag: 'Research Preview',
+    summary: 'Browser-native Claude agent for Max users.',
+    howItWorks:
+      'A Chrome extension that lets Claude see and act on the tab you\'re viewing — click, fill forms, extract data — gated behind explicit per-site permissions.',
+    competitors: ['OpenAI Operator', 'Google Mariner', 'Perplexity Comet', 'Browser Use'],
+  },
+  {
+    id: 'agent-sdk',
+    date: '2025-09-16',
+    name: 'Claude Agent SDK',
+    category: 'Developer',
+    summary: 'Build production agents with the same harness Anthropic uses.',
+    howItWorks:
+      'Open-sources the agent loop that powers Claude Code and internal Anthropic agents: tool orchestration, planning, sandboxed execution, subagent spawning, hooks.',
+    competitors: ['OpenAI Agents SDK', 'LangGraph', 'CrewAI', 'LlamaIndex Agents'],
+    useCases: ['Custom coding agents', 'Domain-specific research agents', 'Customer-support agents'],
+  },
+  {
+    id: 'claude-sonnet-4-5',
+    date: '2025-09-29',
+    name: 'Claude Sonnet 4.5',
+    category: 'Model',
+    tag: 'Flagship',
+    summary: '"World\'s best coding model" — 30+ hour autonomous runs.',
+    howItWorks:
+      'Major leap in long-horizon agent reliability: sharper planning, better recovery from dead-ends, and far less drift over multi-hour runs. Also ships Claude Agent SDK, VS Code extension, and Code Execution tool.',
+    competitors: ['GPT-5', 'Gemini 2.5 Deep Think', 'DeepSeek V3.2'],
+    impact: '77.2% on SWE-bench Verified; 30+ hour agentic runs in internal tests.',
+    pricing: '$3 / $15 per 1M tokens.',
+  },
+  {
+    id: 'imagine',
+    date: '2025-09-30',
+    name: 'Imagine with Claude',
+    category: 'Research',
+    tag: 'Research Preview',
+    summary: 'Generative UI — Claude builds software in real time as you use it.',
+    howItWorks:
+      'Instead of generating code to deploy, Claude generates and renders interfaces on-the-fly per interaction. Every click builds the next view.',
+    competitors: ['ChatGPT Canvas', 'v0', 'Websim'],
+    availability: '5-day research preview for Max users.',
+  },
+  {
+    id: 'claude-haiku-4-5',
+    date: '2025-10-15',
+    name: 'Claude Haiku 4.5',
+    category: 'Model',
+    summary: 'Fast, cheap Haiku that matches Sonnet 4 quality.',
+    howItWorks:
+      'A distilled model that inherits Claude 4 post-training at a fraction of the cost and 2× the speed. Great as a sub-agent model orchestrated by Sonnet/Opus.',
+    competitors: ['GPT-5 nano', 'Gemini 2.5 Flash', 'DeepSeek V3'],
+    impact: 'Matches Sonnet 4 on most real-world tasks at 1/3 the price.',
+    pricing: '$1 / $5 per 1M tokens.',
+  },
+  {
+    id: 'claude-skills',
+    date: '2025-10-16',
+    name: 'Claude Skills',
+    category: 'Developer',
+    summary: 'Reusable agent capabilities shipped as folders of instructions + scripts.',
+    howItWorks:
+      'A Skill is a directory with a SKILL.md and optional code/resources. Claude auto-loads the right Skill for a task. Skills work across Claude.ai, API, and Claude Code.',
+    competitors: ['OpenAI GPTs', 'Custom Claude Projects', 'LangChain Tools'],
+    useCases: ['Org-specific workflows', 'Brand-voice writing', 'Custom data pipelines'],
+  },
+  {
+    id: 'claude-in-chrome',
+    date: '2025-10-16',
+    name: 'Claude in Chrome (GA)',
+    category: 'Integration',
+    tag: 'GA',
+    summary: 'Agentic Chrome extension goes generally available.',
+    howItWorks:
+      'Claude reads the DOM of the current tab, runs actions on your behalf, and shows a task log you can intervene in. Gated per-site permissioning with a "prompt-injection firewall" trained to refuse instructions embedded in page content.',
+    competitors: ['OpenAI Operator', 'Perplexity Comet', 'Google Mariner'],
+  },
+  {
+    id: 'claude-code-web',
+    date: '2025-10-20',
+    name: 'Claude Code on Web & Mobile',
+    category: 'Developer',
+    summary: 'Run Claude Code from claude.ai and the iOS app.',
+    howItWorks:
+      'Anthropic-hosted sandboxes execute your coding task in the cloud. Kick off a job from the web or your phone; come back when the PR is ready to review.',
+    competitors: ['Devin', 'Cursor Background Agents', 'Replit Agent', 'Copilot Workspace'],
+    useCases: ['Fire-and-forget tasks', 'Mobile code reviews', 'Parallel agent fleets'],
+  },
+  {
+    id: 'life-sciences',
+    date: '2025-10-22',
+    name: 'Claude for Life Sciences',
+    category: 'Enterprise',
+    summary: 'Pre-built vertical for pharma & biotech with Benchling, Synapse.org.',
+    howItWorks:
+      'Skills, connectors, and policies tuned for regulated life-sciences workflows: lab notebooks, clinical trial docs, FDA submission drafting.',
+    competitors: ['BenchSci', 'Atomwise', 'Causaly'],
+    useCases: ['Regulatory writing', 'Target identification', 'Trial protocol drafting'],
+  },
+  {
+    id: 'claude-excel',
+    date: '2025-10-27',
+    name: 'Claude in Excel',
+    category: 'Integration',
+    summary: 'Native Claude add-in for Microsoft Excel.',
+    howItWorks:
+      'Sidebar panel that reads the active sheet, writes formulas in-place, explains cells, and can drive multi-sheet analyses. Works with Excel on web, Windows, and Mac.',
+    competitors: ['Microsoft 365 Copilot in Excel', 'Rows AI', 'Equals'],
+    useCases: ['Formula generation', 'Data cleaning', 'Financial modeling', 'Audit trails'],
+  },
+  {
+    id: 'claude-opus-4-5',
+    date: '2025-11-24',
+    name: 'Claude Opus 4.5',
+    category: 'Model',
+    tag: 'Flagship',
+    summary: 'Closes the year with the strongest frontier Opus yet.',
+    howItWorks:
+      'Headline gains on agentic coding, long-horizon task completion (12+ hour horizon), and tool-use efficiency. Introduces "reasoning effort" API parameter.',
+    competitors: ['GPT-5.1', 'Gemini 3', 'DeepSeek V3.2'],
+    impact: 'SWE-bench Verified ~80%; new SOTA on multi-agent orchestration benchmarks.',
+    pricing: '$15 / $75 per 1M tokens.',
+  },
+
+  // ========== 2026 ==========
   {
     id: 'claude-cowork',
     date: '2026-01-12',
@@ -67,8 +373,6 @@ export const LAUNCHES: Launch[] = [
     impact: '#1 on Finance Agent benchmark. ~10pt jump over Opus 4.5 on long-horizon agentic evals.',
     pricing: 'Same API pricing as Opus 4.5 — $15/$75 per 1M input/output tokens.',
   },
-
-  // February
   {
     id: 'code-security',
     date: '2026-02-20',
@@ -110,8 +414,6 @@ export const LAUNCHES: Launch[] = [
     ],
     impact: '400m drive — the longest single-sol traverse of the mission, ~2× the manual-planning average.',
   },
-
-  // March
   {
     id: 'cowork-plugins-enterprise',
     date: '2026-03-01',
@@ -286,8 +588,6 @@ export const LAUNCHES: Launch[] = [
     ],
     availability: 'Research preview in us-east-1 and us-west-2.',
   },
-
-  // April
   {
     id: 'opus-4-7',
     date: '2026-04-16',
