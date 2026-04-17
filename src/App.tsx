@@ -9,6 +9,9 @@ import {
   Tooltip,
   CartesianGrid,
   Cell,
+  AreaChart,
+  Area,
+  Legend,
 } from 'recharts'
 import { motion, AnimatePresence } from 'framer-motion'
 import {
@@ -190,6 +193,49 @@ export default function App() {
     return MONTHS.slice(0, last + 1).map((m) => ({ month: m, count: counts[m] }))
   }, [scope, year])
 
+  // Cumulative launches over time (entire dataset, ignores year filter on purpose — shows growth arc)
+  const cumulativeData = useMemo(() => {
+    const sortedAsc = [...LAUNCHES].sort((a, b) => a.date.localeCompare(b.date))
+    const buckets: Record<string, number> = {}
+    for (const l of sortedAsc) {
+      const key = `${MONTHS[monthIndex(l.date)]} '${yearOf(l.date).slice(2)}`
+      buckets[key] = (buckets[key] ?? 0) + 1
+    }
+    let running = 0
+    const order: string[] = []
+    for (const y of ['2025', '2026']) {
+      for (const m of MONTHS) order.push(`${m} '${y.slice(2)}`)
+    }
+    return order
+      .filter((k) => buckets[k])
+      .map((k) => {
+        running += buckets[k]
+        return { month: k, total: running }
+      })
+  }, [])
+
+  // 2025 vs 2026 category mix for comparison
+  const mixData = useMemo(() => {
+    const counts2025: Record<Category, number> = {
+      Model: 0, Product: 0, Developer: 0, Enterprise: 0,
+      Integration: 0, Research: 0, Safety: 0,
+    }
+    const counts2026: Record<Category, number> = {
+      Model: 0, Product: 0, Developer: 0, Enterprise: 0,
+      Integration: 0, Research: 0, Safety: 0,
+    }
+    for (const l of LAUNCHES) {
+      const y = yearOf(l.date)
+      if (y === '2025') counts2025[l.category]++
+      else if (y === '2026') counts2026[l.category]++
+    }
+    return CATEGORY_ORDER.filter((c) => counts2025[c] > 0 || counts2026[c] > 0).map((c) => ({
+      category: c,
+      '2025': counts2025[c],
+      '2026': counts2026[c],
+    }))
+  }, [])
+
   const byCategory = useMemo(() => {
     const counts: Record<Category, number> = {
       Model: 0, Product: 0, Developer: 0, Enterprise: 0,
@@ -332,44 +378,103 @@ export default function App() {
       </header>
 
       {/* Charts */}
-      <section className="max-w-6xl mx-auto px-6 py-12 grid md:grid-cols-2 gap-5">
-        <ChartCard title="Launch cadence" subtitle={year === 'All' ? 'Across 2025 and 2026' : `By month, ${year}`}>
-          <ResponsiveContainer width="100%" height={220}>
-            <BarChart data={cadenceData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
-              <CartesianGrid stroke={dark ? '#1f1f22' : '#f0f0ef'} vertical={false} />
-              <XAxis
-                dataKey="month"
-                tick={{ fontSize: 11, fill: dark ? '#a1a1aa' : '#525252' }}
-                axisLine={false}
-                tickLine={false}
-                interval={0}
-              />
-              <YAxis tick={{ fontSize: 12, fill: dark ? '#a1a1aa' : '#525252' }} axisLine={false} tickLine={false} allowDecimals={false} />
-              <Tooltip cursor={{ fill: 'rgba(213,108,78,0.08)' }} contentStyle={tooltipStyle(dark)} />
-              <Bar dataKey="count" fill="#D56C4E" radius={[8, 8, 0, 0]} />
-            </BarChart>
-          </ResponsiveContainer>
-        </ChartCard>
+      <section className="max-w-6xl mx-auto px-6 py-12 space-y-5">
+        <div className="grid md:grid-cols-2 gap-5">
+          <ChartCard title="Launch cadence" subtitle={year === 'All' ? 'Across 2025 and 2026' : `By month, ${year}`}>
+            <ResponsiveContainer width="100%" height={220}>
+              <BarChart data={cadenceData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+                <CartesianGrid stroke={dark ? '#1f1f22' : '#f0f0ef'} vertical={false} />
+                <XAxis
+                  dataKey="month"
+                  tick={{ fontSize: 11, fill: dark ? '#a1a1aa' : '#525252' }}
+                  axisLine={false}
+                  tickLine={false}
+                  interval={0}
+                />
+                <YAxis tick={{ fontSize: 12, fill: dark ? '#a1a1aa' : '#525252' }} axisLine={false} tickLine={false} allowDecimals={false} />
+                <Tooltip cursor={{ fill: 'rgba(213,108,78,0.08)' }} contentStyle={tooltipStyle(dark)} />
+                <Bar dataKey="count" fill="#D56C4E" radius={[8, 8, 0, 0]} />
+              </BarChart>
+            </ResponsiveContainer>
+          </ChartCard>
 
-        <ChartCard title="Where we shipped" subtitle="By category">
-          <ResponsiveContainer width="100%" height={220}>
-            <BarChart
-              data={byCategory}
-              layout="vertical"
-              margin={{ top: 5, right: 20, left: 0, bottom: 0 }}
-            >
-              <CartesianGrid stroke={dark ? '#1f1f22' : '#f0f0ef'} horizontal={false} />
-              <XAxis type="number" tick={{ fontSize: 12, fill: dark ? '#a1a1aa' : '#525252' }} axisLine={false} tickLine={false} allowDecimals={false} />
-              <YAxis type="category" dataKey="category" tick={{ fontSize: 12, fill: dark ? '#a1a1aa' : '#525252' }} axisLine={false} tickLine={false} width={90} />
-              <Tooltip cursor={{ fill: 'rgba(37,99,235,0.06)' }} contentStyle={tooltipStyle(dark)} />
-              <Bar dataKey="count" radius={[0, 8, 8, 0]}>
-                {byCategory.map((d) => (
-                  <Cell key={d.category} fill={d.color} />
-                ))}
-              </Bar>
-            </BarChart>
-          </ResponsiveContainer>
-        </ChartCard>
+          <ChartCard title="Where we shipped" subtitle={year === 'All' ? 'By category, all time' : `By category, ${year}`}>
+            <ResponsiveContainer width="100%" height={220}>
+              <BarChart
+                data={byCategory}
+                layout="vertical"
+                margin={{ top: 5, right: 20, left: 0, bottom: 0 }}
+              >
+                <CartesianGrid stroke={dark ? '#1f1f22' : '#f0f0ef'} horizontal={false} />
+                <XAxis type="number" tick={{ fontSize: 12, fill: dark ? '#a1a1aa' : '#525252' }} axisLine={false} tickLine={false} allowDecimals={false} />
+                <YAxis type="category" dataKey="category" tick={{ fontSize: 12, fill: dark ? '#a1a1aa' : '#525252' }} axisLine={false} tickLine={false} width={90} />
+                <Tooltip cursor={{ fill: 'rgba(37,99,235,0.06)' }} contentStyle={tooltipStyle(dark)} />
+                <Bar dataKey="count" radius={[0, 8, 8, 0]}>
+                  {byCategory.map((d) => (
+                    <Cell key={d.category} fill={d.color} />
+                  ))}
+                </Bar>
+              </BarChart>
+            </ResponsiveContainer>
+          </ChartCard>
+        </div>
+
+        <div className="grid md:grid-cols-2 gap-5">
+          <ChartCard title="Cumulative launches" subtitle="Total shipped to date">
+            <ResponsiveContainer width="100%" height={220}>
+              <AreaChart data={cumulativeData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+                <defs>
+                  <linearGradient id="cumulativeFill" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stopColor="#D56C4E" stopOpacity={0.35} />
+                    <stop offset="100%" stopColor="#D56C4E" stopOpacity={0} />
+                  </linearGradient>
+                </defs>
+                <CartesianGrid stroke={dark ? '#1f1f22' : '#f0f0ef'} vertical={false} />
+                <XAxis
+                  dataKey="month"
+                  tick={{ fontSize: 10.5, fill: dark ? '#a1a1aa' : '#525252' }}
+                  axisLine={false}
+                  tickLine={false}
+                  interval={1}
+                />
+                <YAxis tick={{ fontSize: 12, fill: dark ? '#a1a1aa' : '#525252' }} axisLine={false} tickLine={false} allowDecimals={false} />
+                <Tooltip cursor={{ stroke: '#D56C4E', strokeOpacity: 0.3 }} contentStyle={tooltipStyle(dark)} />
+                <Area
+                  type="monotone"
+                  dataKey="total"
+                  stroke="#D56C4E"
+                  strokeWidth={2.25}
+                  fill="url(#cumulativeFill)"
+                  dot={false}
+                  activeDot={{ r: 4, strokeWidth: 2, stroke: dark ? '#0a0a0b' : 'white' }}
+                />
+              </AreaChart>
+            </ResponsiveContainer>
+          </ChartCard>
+
+          <ChartCard title="2025 vs 2026 mix" subtitle="Category share, side by side">
+            <ResponsiveContainer width="100%" height={220}>
+              <BarChart data={mixData} margin={{ top: 10, right: 10, left: -10, bottom: 0 }}>
+                <CartesianGrid stroke={dark ? '#1f1f22' : '#f0f0ef'} vertical={false} />
+                <XAxis
+                  dataKey="category"
+                  tick={{ fontSize: 11, fill: dark ? '#a1a1aa' : '#525252' }}
+                  axisLine={false}
+                  tickLine={false}
+                  interval={0}
+                />
+                <YAxis tick={{ fontSize: 12, fill: dark ? '#a1a1aa' : '#525252' }} axisLine={false} tickLine={false} allowDecimals={false} />
+                <Tooltip cursor={{ fill: 'rgba(0,0,0,0.04)' }} contentStyle={tooltipStyle(dark)} />
+                <Legend
+                  iconType="circle"
+                  wrapperStyle={{ fontSize: 11, paddingTop: 4 }}
+                />
+                <Bar dataKey="2025" fill="#94a3b8" radius={[6, 6, 0, 0]} />
+                <Bar dataKey="2026" fill="#D56C4E" radius={[6, 6, 0, 0]} />
+              </BarChart>
+            </ResponsiveContainer>
+          </ChartCard>
+        </div>
       </section>
 
       {/* Controls */}

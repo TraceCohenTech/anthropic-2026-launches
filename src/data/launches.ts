@@ -38,6 +38,18 @@ export const LAUNCHES: Launch[] = [
     impact: 'Reduced hallucinated facts by ~30% in Anthropic internal evals.',
   },
   {
+    id: 'economic-index',
+    date: '2025-02-10',
+    name: 'Anthropic Economic Index',
+    category: 'Research',
+    summary: 'First dataset mapping how AI is being used across the economy.',
+    howItWorks:
+      'Anthropic analyzed millions of anonymized Claude.ai conversations and bucketed them against the O*NET occupational taxonomy to show which jobs and tasks are actually using AI today. Released as an open dataset plus a recurring report.',
+    competitors: ['OpenAI GPT-4 usage studies', 'Stanford AI Index', 'McKinsey AI reports'],
+    useCases: ['Labor-market research', 'Policy and regulation', 'Enterprise AI strategy'],
+    impact: 'First public, conversation-grounded view of real-world AI adoption at scale.',
+  },
+  {
     id: 'claude-3-7-sonnet',
     date: '2025-02-24',
     name: 'Claude 3.7 Sonnet',
@@ -99,6 +111,18 @@ export const LAUNCHES: Launch[] = [
     useCases: ['Market and competitive research', 'Due diligence', 'Literature reviews'],
   },
   {
+    id: 'web-search-tool',
+    date: '2025-05-07',
+    name: 'Web Search Tool (API)',
+    category: 'Developer',
+    summary: 'First-party web search as a Claude API tool.',
+    howItWorks:
+      'A managed tool Claude can call during a request to retrieve up-to-date information from the web. Results come back with citations you can surface in the UI, and queries and domains are configurable per-request.',
+    competitors: ['OpenAI web search tool', 'Gemini Google Search grounding', 'Perplexity API', 'Tavily'],
+    useCases: ['Research assistants', 'Up-to-date customer support', 'News and market monitoring'],
+    pricing: '$10 per 1,000 searches.',
+  },
+  {
     id: 'integrations',
     date: '2025-05-01',
     name: 'Integrations (MCP connectors)',
@@ -147,8 +171,19 @@ export const LAUNCHES: Launch[] = [
     useCases: ['Shareable calculators', 'Interactive one-pagers', 'Quick internal tools'],
   },
   {
+    id: 'files-api',
+    date: '2025-06-24',
+    name: 'Files API',
+    category: 'Developer',
+    summary: 'Upload files once, reuse across Messages API and agents.',
+    howItWorks:
+      'Persistent file storage tied to your API org. Upload PDFs, images, code, or datasets once and reference them by ID in any Messages API call or agent run, instead of base64-embedding them every request.',
+    competitors: ['OpenAI Files API', 'Google Vertex Files', 'Cohere Embed-as-Retrieve'],
+    useCases: ['Document Q&A at scale', 'Multi-turn agents with shared context', 'Vision workflows over repeated images'],
+  },
+  {
     id: 'claude-gov',
-    date: '2025-07-10',
+    date: '2025-06-05',
     name: 'Claude Gov',
     category: 'Enterprise',
     summary: 'FedRAMP-ready Claude for U.S. national security customers.',
@@ -181,7 +216,7 @@ export const LAUNCHES: Launch[] = [
   },
   {
     id: 'memory',
-    date: '2025-08-12',
+    date: '2025-08-11',
     name: 'Memory',
     category: 'Product',
     summary: 'Claude remembers context across conversations.',
@@ -248,6 +283,19 @@ export const LAUNCHES: Launch[] = [
       'Instead of generating code to deploy, Claude generates and renders interfaces on-the-fly per interaction. Every click builds the next view.',
     competitors: ['ChatGPT Canvas', 'v0', 'Websim'],
     availability: '5-day research preview for Max users.',
+  },
+  {
+    id: 'petri',
+    date: '2025-10-07',
+    name: 'Petri',
+    category: 'Safety',
+    summary: 'Open-source agent for automated model-safety audits.',
+    howItWorks:
+      'Petri is an autonomous red-team harness that spins up hypotheses about a model\'s failure modes, probes them with adversarial prompts, and produces a structured audit report. Anthropic open-sourced it so labs, regulators, and enterprises can run their own audits.',
+    competitors: ['HELM', 'DeepMind SAFE', 'METR evaluations', 'Garak'],
+    useCases: ['Pre-deployment safety audits', 'Regulatory testing', 'Bug bounties for model behavior'],
+    impact: 'Anthropic used Petri to surface novel misuse vectors before Sonnet 4.5 shipped.',
+    availability: 'Open source on GitHub.',
   },
   {
     id: 'claude-haiku-4-5',
