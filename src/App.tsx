@@ -337,19 +337,46 @@ export default function App() {
       </nav>
 
       {/* Hero */}
-      <header className="hero-bg dark:hero-bg-dark relative overflow-hidden">
+      <header className="hero-bg relative overflow-hidden">
+        {/* Subtle grid overlay */}
+        <div className="hero-grid absolute inset-0 pointer-events-none" />
+        {/* Floating color orbs */}
+        <div
+          aria-hidden
+          className="absolute -top-24 -right-24 w-[420px] h-[420px] rounded-full blur-3xl opacity-70 animate-float-slow pointer-events-none"
+          style={{
+            background:
+              'radial-gradient(circle at 30% 30%, rgba(213,108,78,0.55), rgba(245,158,11,0.25) 45%, transparent 70%)',
+          }}
+        />
+        <div
+          aria-hidden
+          className="absolute top-20 -left-32 w-[360px] h-[360px] rounded-full blur-3xl opacity-60 animate-float-slower pointer-events-none"
+          style={{
+            background:
+              'radial-gradient(circle at 60% 40%, rgba(37,99,235,0.38), rgba(13,148,136,0.25) 50%, transparent 70%)',
+          }}
+        />
+
         <div className="max-w-6xl mx-auto px-6 pt-14 pb-16 relative">
           <motion.div
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
-            className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/90 dark:bg-neutral-900/80 border border-neutral-200 dark:border-neutral-800 text-[12px] font-medium text-neutral-700 dark:text-neutral-300 mb-7 backdrop-blur"
+            className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/90 dark:bg-neutral-900/80 border border-neutral-200 dark:border-neutral-800 text-[12px] font-medium text-neutral-700 dark:text-neutral-300 mb-7 backdrop-blur shadow-sm"
           >
             <span className="relative flex w-1.5 h-1.5">
               <span className="animate-ping absolute inline-flex w-full h-full rounded-full bg-[#D56C4E] opacity-60" />
               <span className="relative inline-flex w-1.5 h-1.5 rounded-full bg-[#D56C4E]" />
             </span>
             Live · Updated April 17, 2026
+            <span className="mx-1 text-neutral-300 dark:text-neutral-700">·</span>
+            <span className="inline-flex items-center gap-1">
+              <span className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: '#D56C4E' }} />
+              <span className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: '#2563EB' }} />
+              <span className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: '#0D9488' }} />
+              <span className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: '#F59E0B' }} />
+            </span>
           </motion.div>
 
           <motion.h1
@@ -360,7 +387,13 @@ export default function App() {
           >
             Every Claude launch.
             <br />
-            <span className="bg-gradient-to-r from-neutral-500 to-neutral-400 dark:from-neutral-400 dark:to-neutral-600 bg-clip-text text-transparent">
+            <span
+              className="bg-clip-text text-transparent"
+              style={{
+                backgroundImage:
+                  'linear-gradient(95deg, #D56C4E 0%, #F59E0B 45%, #2563EB 100%)',
+              }}
+            >
               2025 → 2026.
             </span>
           </motion.h1>

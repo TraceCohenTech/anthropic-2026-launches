@@ -27,18 +27,49 @@ body {
 /* Hero backdrop — light */
 .hero-bg {
   background:
-    radial-gradient(1400px 600px at 85% -10%, rgba(213,108,78,0.22), transparent 60%),
-    radial-gradient(900px 400px at 5% 10%, rgba(37,99,235,0.08), transparent 60%),
+    radial-gradient(1200px 520px at 88% -8%, rgba(213,108,78,0.32), transparent 62%),
+    radial-gradient(800px 420px at 8% 0%, rgba(37,99,235,0.14), transparent 60%),
+    radial-gradient(700px 400px at 55% 110%, rgba(245,158,11,0.18), transparent 60%),
+    radial-gradient(600px 380px at 92% 90%, rgba(13,148,136,0.12), transparent 60%),
     linear-gradient(180deg, #ffffff 0%, #fafaf9 100%);
 }
 
 /* Hero backdrop — dark */
 .dark .hero-bg {
   background:
-    radial-gradient(1400px 600px at 85% -10%, rgba(213,108,78,0.28), transparent 60%),
-    radial-gradient(900px 400px at 5% 10%, rgba(37,99,235,0.15), transparent 60%),
+    radial-gradient(1200px 520px at 88% -8%, rgba(213,108,78,0.42), transparent 62%),
+    radial-gradient(800px 420px at 8% 0%, rgba(37,99,235,0.28), transparent 60%),
+    radial-gradient(700px 400px at 55% 110%, rgba(245,158,11,0.20), transparent 60%),
+    radial-gradient(600px 380px at 92% 90%, rgba(13,148,136,0.20), transparent 60%),
     linear-gradient(180deg, #0f0f10 0%, #0a0a0b 100%);
 }
+
+/* Subtle grid overlay for the hero */
+.hero-grid {
+  background-image:
+    linear-gradient(to right, rgba(0,0,0,0.035) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(0,0,0,0.035) 1px, transparent 1px);
+  background-size: 56px 56px;
+  mask-image: radial-gradient(ellipse 70% 60% at 50% 40%, black 30%, transparent 80%);
+}
+.dark .hero-grid {
+  background-image:
+    linear-gradient(to right, rgba(255,255,255,0.04) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255,255,255,0.04) 1px, transparent 1px);
+}
+
+/* Floating animated orb */
+@keyframes float-slow {
+  0%, 100% { transform: translate3d(0, 0, 0); }
+  50% { transform: translate3d(0, -18px, 0); }
+}
+.animate-float-slow { animation: float-slow 9s ease-in-out infinite; }
+
+@keyframes float-slower {
+  0%, 100% { transform: translate3d(0, 0, 0); }
+  50% { transform: translate3d(12px, -10px, 0); }
+}
+.animate-float-slower { animation: float-slower 12s ease-in-out infinite; }
 
 .card-hover {
   transition: transform .25s ease, box-shadow .25s ease, border-color .25s ease;
