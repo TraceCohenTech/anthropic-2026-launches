@@ -1,0 +1,83 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: light;
+}
+
+html, body, #root {
+  height: 100%;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  background: #fafaf9;
+}
+
+.dark body {
+  background: #0a0a0b;
+}
+
+* {
+  text-rendering: optimizeLegibility;
+}
+
+/* Hero backdrop — light */
+.hero-bg {
+  background:
+    radial-gradient(1400px 600px at 85% -10%, rgba(213,108,78,0.22), transparent 60%),
+    radial-gradient(900px 400px at 5% 10%, rgba(37,99,235,0.08), transparent 60%),
+    linear-gradient(180deg, #ffffff 0%, #fafaf9 100%);
+}
+
+/* Hero backdrop — dark */
+.dark .hero-bg {
+  background:
+    radial-gradient(1400px 600px at 85% -10%, rgba(213,108,78,0.28), transparent 60%),
+    radial-gradient(900px 400px at 5% 10%, rgba(37,99,235,0.15), transparent 60%),
+    linear-gradient(180deg, #0f0f10 0%, #0a0a0b 100%);
+}
+
+.card-hover {
+  transition: transform .25s ease, box-shadow .25s ease, border-color .25s ease;
+}
+.card-hover:hover {
+  box-shadow: 0 12px 32px rgba(0,0,0,0.06);
+  border-color: #d4d4d4;
+}
+.dark .card-hover:hover {
+  box-shadow: 0 12px 32px rgba(0,0,0,0.4);
+  border-color: #404040;
+}
+
+/* Smooth scroll */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #d4d4d4;
+  border-radius: 10px;
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+.dark ::-webkit-scrollbar-thumb {
+  background: #404040;
+  background-clip: content-box;
+  border: 2px solid transparent;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #a3a3a3;
+  background-clip: content-box;
+  border: 2px solid transparent;
+}
