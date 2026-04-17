@@ -30,6 +30,12 @@ import {
   Plug,
   FlaskConical,
   Shield,
+  Cog,
+  Target,
+  Users,
+  TrendingUp,
+  DollarSign,
+  Globe,
   type LucideIcon,
 } from 'lucide-react'
 
@@ -433,8 +439,25 @@ export default function App() {
                           <p className="mt-2 text-sm text-neutral-700 dark:text-neutral-300 leading-relaxed">
                             {l.summary}
                           </p>
+                          {l.competitors && l.competitors.length > 0 && (
+                            <div className="mt-3 flex flex-wrap gap-1">
+                              {l.competitors.slice(0, 3).map((c) => (
+                                <span
+                                  key={c}
+                                  className="text-[10.5px] font-medium px-1.5 py-0.5 rounded bg-neutral-100 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-400"
+                                >
+                                  vs {c}
+                                </span>
+                              ))}
+                              {l.competitors.length > 3 && (
+                                <span className="text-[10.5px] font-medium px-1.5 py-0.5 text-neutral-500 dark:text-neutral-500">
+                                  +{l.competitors.length - 3}
+                                </span>
+                              )}
+                            </div>
+                          )}
                           <div className="mt-3 inline-flex items-center gap-1 text-xs font-medium text-neutral-500 dark:text-neutral-500 opacity-0 group-hover:opacity-100 transition">
-                            More details <ArrowUpRight size={12} />
+                            Full breakdown <ArrowUpRight size={12} />
                           </div>
                         </motion.button>
                       )
@@ -499,7 +522,7 @@ function LaunchModal({ launch, onClose, dark }: { launch: Launch; onClose: () =>
         exit={{ opacity: 0, scale: 0.95, y: 12 }}
         transition={{ type: 'spring', damping: 22, stiffness: 260 }}
         onClick={(e) => e.stopPropagation()}
-        className="relative w-full max-w-lg rounded-3xl bg-white dark:bg-neutral-950 border border-neutral-200 dark:border-neutral-800 p-7 shadow-2xl"
+        className="relative w-full max-w-xl max-h-[88vh] overflow-y-auto rounded-3xl bg-white dark:bg-neutral-950 border border-neutral-200 dark:border-neutral-800 p-7 shadow-2xl"
       >
         <button
           onClick={onClose}
@@ -538,12 +561,104 @@ function LaunchModal({ launch, onClose, dark }: { launch: Launch; onClose: () =>
           </p>
         )}
 
+        {launch.howItWorks && (
+          <ModalSection icon={<Cog size={13} />} label="How it works" color={color}>
+            <p className="text-[14px] text-neutral-700 dark:text-neutral-300 leading-relaxed">
+              {launch.howItWorks}
+            </p>
+          </ModalSection>
+        )}
+
+        {launch.useCases && launch.useCases.length > 0 && (
+          <ModalSection icon={<Target size={13} />} label="Use cases" color={color}>
+            <ul className="space-y-1.5">
+              {launch.useCases.map((u) => (
+                <li
+                  key={u}
+                  className="flex items-start gap-2 text-[14px] text-neutral-700 dark:text-neutral-300 leading-relaxed"
+                >
+                  <span
+                    className="mt-1.5 inline-block w-1 h-1 rounded-full flex-shrink-0"
+                    style={{ backgroundColor: color }}
+                  />
+                  <span>{u}</span>
+                </li>
+              ))}
+            </ul>
+          </ModalSection>
+        )}
+
+        {launch.competitors && launch.competitors.length > 0 && (
+          <ModalSection icon={<Users size={13} />} label="Competes with" color={color}>
+            <div className="flex flex-wrap gap-1.5">
+              {launch.competitors.map((c) => (
+                <span
+                  key={c}
+                  className="px-2 py-0.5 rounded-full text-[12px] font-medium bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 border border-neutral-200 dark:border-neutral-700"
+                >
+                  {c}
+                </span>
+              ))}
+            </div>
+          </ModalSection>
+        )}
+
+        {launch.impact && (
+          <ModalSection icon={<TrendingUp size={13} />} label="Impact" color={color}>
+            <p className="text-[14px] text-neutral-700 dark:text-neutral-300 leading-relaxed">
+              {launch.impact}
+            </p>
+          </ModalSection>
+        )}
+
+        {(launch.pricing || launch.availability) && (
+          <div className="mt-5 grid grid-cols-1 gap-2">
+            {launch.pricing && (
+              <div className="flex items-start gap-2 text-[13px] text-neutral-600 dark:text-neutral-400">
+                <DollarSign size={13} className="mt-0.5 flex-shrink-0" style={{ color }} />
+                <span>{launch.pricing}</span>
+              </div>
+            )}
+            {launch.availability && (
+              <div className="flex items-start gap-2 text-[13px] text-neutral-600 dark:text-neutral-400">
+                <Globe size={13} className="mt-0.5 flex-shrink-0" style={{ color }} />
+                <span>{launch.availability}</span>
+              </div>
+            )}
+          </div>
+        )}
+
         <div
           className="mt-6 h-1 rounded-full"
           style={{ background: `linear-gradient(90deg, ${color}, ${color}33)` }}
         />
       </motion.div>
     </motion.div>
+  )
+}
+
+function ModalSection({
+  icon,
+  label,
+  color,
+  children,
+}: {
+  icon: React.ReactNode
+  label: string
+  color: string
+  children: React.ReactNode
+}) {
+  return (
+    <div className="mt-5">
+      <div
+        className="inline-flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-wider mb-2"
+        style={{ color }}
+      >
+        {icon}
+        {label}
+      </div>
+      {children}
+    </div>
   )
 }
 
