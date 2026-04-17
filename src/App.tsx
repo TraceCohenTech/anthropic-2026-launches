@@ -30,6 +30,7 @@ import {
   Plug,
   FlaskConical,
   Shield,
+  type LucideIcon,
 } from 'lucide-react'
 
 const CATEGORY_ORDER: Category[] = [
@@ -52,7 +53,7 @@ const CATEGORY_COLOR: Record<Category, string> = {
   Safety: '#059669',
 }
 
-const CATEGORY_ICON: Record<Category, React.ComponentType<{ size?: number }>> = {
+const CATEGORY_ICON: Record<Category, LucideIcon> = {
   Model: Brain,
   Product: Package,
   Developer: Code2,
