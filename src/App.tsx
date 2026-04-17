@@ -214,6 +214,31 @@ export default function App() {
       })
   }, [])
 
+  // Month-by-month timeline: all launches grouped into month buckets from first → last
+  const timelineMonths = useMemo(() => {
+    const buckets: Record<string, Launch[]> = {}
+    for (const l of LAUNCHES) {
+      const [y, m] = l.date.split('-')
+      const key = `${y}-${m}`
+      if (!buckets[key]) buckets[key] = []
+      buckets[key].push(l)
+    }
+    // sort launches within each bucket by date ascending so stacking is deterministic
+    for (const k of Object.keys(buckets)) {
+      buckets[k].sort((a, b) => a.date.localeCompare(b.date))
+    }
+    const keys = Object.keys(buckets).sort()
+    return keys.map((k) => {
+      const [y, m] = k.split('-')
+      return {
+        key: k,
+        year: y,
+        monthLabel: MONTHS[Number(m) - 1],
+        launches: buckets[k],
+      }
+    })
+  }, [])
+
   // 2025 vs 2026 category mix for comparison
   const mixData = useMemo(() => {
     const counts2025: Record<Category, number> = {
@@ -377,19 +402,91 @@ export default function App() {
         </div>
       </header>
 
+      {/* Month-by-month timeline strip */}
+      <section className="max-w-6xl mx-auto px-6 pt-12">
+        <div className="flex items-baseline justify-between gap-3 mb-4 flex-wrap">
+          <div>
+            <h2 className="text-xl font-semibold tracking-tight">Every launch, month by month</h2>
+            <p className="text-sm text-neutral-500 dark:text-neutral-400 mt-0.5">
+              Each dot is one launch, colored by category. Hover for details.
+            </p>
+          </div>
+          <div className="flex flex-wrap items-center gap-3 text-[11px] text-neutral-600 dark:text-neutral-400">
+            {CATEGORY_ORDER.filter((c) => LAUNCHES.some((l) => l.category === c)).map((c) => (
+              <span key={c} className="inline-flex items-center gap-1.5">
+                <span className="w-2 h-2 rounded-full" style={{ backgroundColor: CATEGORY_COLOR[c] }} />
+                {c}
+              </span>
+            ))}
+          </div>
+        </div>
+
+        <div className="rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-950 overflow-x-auto">
+          <div className="flex items-end min-w-max px-4 pt-5 pb-4 gap-1">
+            {timelineMonths.map((m, idx) => {
+              const isYearStart =
+                idx === 0 || timelineMonths[idx - 1].year !== m.year
+              const isCurrent = m.year === '2026' && m.monthLabel === 'Apr'
+              return (
+                <div
+                  key={m.key}
+                  className={`flex flex-col items-center shrink-0 ${
+                    isYearStart && idx > 0 ? 'ml-2 pl-2 border-l border-dashed border-neutral-200 dark:border-neutral-800' : ''
+                  }`}
+                  style={{ width: 44 }}
+                >
+                  {/* dot stack (builds upward from baseline) */}
+                  <div className="flex flex-col-reverse items-center gap-1 mb-2">
+                    {m.launches.map((l) => (
+                      <div
+                        key={l.id}
+                        title={`${l.name} — ${formatDate(l.date)}`}
+                        className="w-2.5 h-2.5 rounded-full ring-1 ring-white dark:ring-neutral-950 shadow-sm hover:scale-[1.6] transition-transform cursor-default"
+                        style={{ backgroundColor: CATEGORY_COLOR[l.category] }}
+                      />
+                    ))}
+                  </div>
+                  {/* month label */}
+                  <div
+                    className={`text-[10px] font-medium tracking-tight ${
+                      isCurrent
+                        ? 'text-[#D56C4E]'
+                        : 'text-neutral-500 dark:text-neutral-400'
+                    }`}
+                  >
+                    {m.monthLabel}
+                  </div>
+                  {/* year marker on first month of each year */}
+                  <div className="text-[9.5px] mt-0.5 text-neutral-400 dark:text-neutral-500">
+                    {isYearStart ? `'${m.year.slice(2)}` : ''}
+                  </div>
+                  {/* count */}
+                  <div className="text-[10px] mt-1 text-neutral-400 dark:text-neutral-500 tabular-nums">
+                    {m.launches.length}
+                  </div>
+                </div>
+              )
+            })}
+          </div>
+        </div>
+      </section>
+
       {/* Charts */}
       <section className="max-w-6xl mx-auto px-6 py-12 space-y-5">
         <div className="grid md:grid-cols-2 gap-5">
           <ChartCard title="Launch cadence" subtitle={year === 'All' ? 'Across 2025 and 2026' : `By month, ${year}`}>
-            <ResponsiveContainer width="100%" height={220}>
-              <BarChart data={cadenceData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+            <ResponsiveContainer width="100%" height={240}>
+              <BarChart data={cadenceData} margin={{ top: 10, right: 10, left: -20, bottom: 28 }}>
                 <CartesianGrid stroke={dark ? '#1f1f22' : '#f0f0ef'} vertical={false} />
                 <XAxis
                   dataKey="month"
-                  tick={{ fontSize: 11, fill: dark ? '#a1a1aa' : '#525252' }}
+                  tick={{ fontSize: 10.5, fill: dark ? '#a1a1aa' : '#525252' }}
                   axisLine={false}
                   tickLine={false}
                   interval={0}
+                  angle={-38}
+                  textAnchor="end"
+                  height={50}
                 />
                 <YAxis tick={{ fontSize: 12, fill: dark ? '#a1a1aa' : '#525252' }} axisLine={false} tickLine={false} allowDecimals={false} />
                 <Tooltip cursor={{ fill: 'rgba(213,108,78,0.08)' }} contentStyle={tooltipStyle(dark)} />
@@ -421,8 +518,8 @@ export default function App() {
 
         <div className="grid md:grid-cols-2 gap-5">
           <ChartCard title="Cumulative launches" subtitle="Total shipped to date">
-            <ResponsiveContainer width="100%" height={220}>
-              <AreaChart data={cumulativeData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+            <ResponsiveContainer width="100%" height={240}>
+              <AreaChart data={cumulativeData} margin={{ top: 10, right: 10, left: -20, bottom: 28 }}>
                 <defs>
                   <linearGradient id="cumulativeFill" x1="0" y1="0" x2="0" y2="1">
                     <stop offset="0%" stopColor="#D56C4E" stopOpacity={0.35} />
@@ -435,7 +532,10 @@ export default function App() {
                   tick={{ fontSize: 10.5, fill: dark ? '#a1a1aa' : '#525252' }}
                   axisLine={false}
                   tickLine={false}
-                  interval={1}
+                  interval={0}
+                  angle={-38}
+                  textAnchor="end"
+                  height={50}
                 />
                 <YAxis tick={{ fontSize: 12, fill: dark ? '#a1a1aa' : '#525252' }} axisLine={false} tickLine={false} allowDecimals={false} />
                 <Tooltip cursor={{ stroke: '#D56C4E', strokeOpacity: 0.3 }} contentStyle={tooltipStyle(dark)} />
